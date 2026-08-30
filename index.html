@@ -78,7 +78,7 @@
     </div>
 
     <!-- 메인 링크 카드리스트 -->
-    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-1 flex flex-col justify-center space-y-12">
+    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-1 flex flex-col justify-center space-y-6">
         
         <!-- 1. 핵심 주요 링크 (4개) -->
         <div>
@@ -159,100 +159,17 @@
             </div>
         </div>
 
-        <!-- 2. 보조 도구 영역 (코드 스니펫 복사 & 에러 해결) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4 border-t border-slate-800/80">
+        <!-- 2. 초소형 미니 보조 바 (한 줄로 줄인 사이즈) -->
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button onclick="openModal('snippet-modal')" class="inline-flex items-center gap-2 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl text-xs text-slate-300 transition-colors">
+                <i class="fa-solid fa-code text-cyan-400"></i>
+                <span>코드 조각 복사</span>
+            </button>
             
-            <!-- [보조 1] 자주 쓰는 코드 스니펫 복사 -->
-            <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5">
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-code text-cyan-400 text-sm"></i>
-                        <h3 class="text-sm font-bold text-white">필수 아두이노 코드 조각</h3>
-                    </div>
-                    <span class="text-[11px] text-slate-500">클릭 시 자동 복사</span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <!-- 스니펫 1 -->
-                    <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between group hover:border-cyan-500/40 transition-colors">
-                        <div class="truncate mr-2">
-                            <p class="text-[10px] text-slate-400">핀 입출력 설정</p>
-                            <code class="text-cyan-300 font-mono text-[11px]">pinMode(13, OUTPUT);</code>
-                        </div>
-                        <button onclick="copySnippet('pinMode(13, OUTPUT);')" class="text-slate-500 hover:text-cyan-400 p-1.5 transition-colors shrink-0" title="복사">
-                            <i class="fa-regular fa-copy"></i>
-                        </button>
-                    </div>
-
-                    <!-- 스니펫 2 -->
-                    <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between group hover:border-cyan-500/40 transition-colors">
-                        <div class="truncate mr-2">
-                            <p class="text-[10px] text-slate-400">디지털 출력 (HIGH)</p>
-                            <code class="text-cyan-300 font-mono text-[11px]">digitalWrite(13, HIGH);</code>
-                        </div>
-                        <button onclick="copySnippet('digitalWrite(13, HIGH);')" class="text-slate-500 hover:text-cyan-400 p-1.5 transition-colors shrink-0" title="복사">
-                            <i class="fa-regular fa-copy"></i>
-                        </button>
-                    </div>
-
-                    <!-- 스니펫 3 -->
-                    <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between group hover:border-cyan-500/40 transition-colors">
-                        <div class="truncate mr-2">
-                            <p class="text-[10px] text-slate-400">시리얼 통신 시작</p>
-                            <code class="text-cyan-300 font-mono text-[11px]">Serial.begin(9600);</code>
-                        </div>
-                        <button onclick="copySnippet('Serial.begin(9600);')" class="text-slate-500 hover:text-cyan-400 p-1.5 transition-colors shrink-0" title="복사">
-                            <i class="fa-regular fa-copy"></i>
-                        </button>
-                    </div>
-
-                    <!-- 스니펫 4 -->
-                    <div class="bg-slate-950 border border-slate-800/80 p-2.5 rounded-xl flex items-center justify-between group hover:border-cyan-500/40 transition-colors">
-                        <div class="truncate mr-2">
-                            <p class="text-[10px] text-slate-400">1초 대기 (1000ms)</p>
-                            <code class="text-cyan-300 font-mono text-[11px]">delay(1000);</code>
-                        </div>
-                        <button onclick="copySnippet('delay(1000);')" class="text-slate-500 hover:text-cyan-400 p-1.5 transition-colors shrink-0" title="복사">
-                            <i class="fa-regular fa-copy"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- [보조 2] 자주 발생하는 오류 해결가이드 (아코디언) -->
-            <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5">
-                <div class="flex items-center gap-2 mb-4">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
-                    <h3 class="text-sm font-bold text-white">실습 중 자주 생기는 에러 해결법</h3>
-                </div>
-
-                <div class="space-y-2 text-xs">
-                    <!-- 에러 항목 1 -->
-                    <details class="group bg-slate-950 border border-slate-800/80 rounded-xl overflow-hidden">
-                        <summary class="flex justify-between items-center p-3 cursor-pointer text-slate-300 font-semibold hover:text-white select-none">
-                            <span><i class="fa-solid fa-plug text-red-400 mr-2"></i>업로드 실패 (stk500_getsync / Port Error)</span>
-                            <i class="fa-solid fa-chevron-down text-[10px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="px-3 pb-3 pt-1 text-slate-400 border-t border-slate-900 leading-relaxed text-[11px]">
-                            아두이노 보드의 포트(Port) 연결이 끊겼거나 올바른 COM 포트가 선택되지 않은 경우입니다.<br>
-                            👉 <strong class="text-amber-400">툴 ➔ 포트(Port)</strong>에서 연결된 COM 포트를 다시 선택해주세요.
-                        </div>
-                    </details>
-
-                    <!-- 에러 항목 2 -->
-                    <details class="group bg-slate-950 border border-slate-800/80 rounded-xl overflow-hidden">
-                        <summary class="flex justify-between items-center p-3 cursor-pointer text-slate-300 font-semibold hover:text-white select-none">
-                            <span><i class="fa-solid fa-circle-xmark text-red-400 mr-2"></i>'was not declared in this scope' 에러</span>
-                            <i class="fa-solid fa-chevron-down text-[10px] group-open:rotate-180 transition-transform"></i>
-                        </summary>
-                        <div class="px-3 pb-3 pt-1 text-slate-400 border-t border-slate-900 leading-relaxed text-[11px]">
-                            변수나 함수 이름을 틀렸거나, 세미콜론(<code class="text-cyan-300">;</code>) 또는 중괄호(<code class="text-cyan-300">{}</code>)가 빠진 경우 발생합니다.<br>
-                            👉 오탈자 및 대소문자 구분을 확인하고, 문장 끝 세미콜론 누락 여부를 검사하세요.
-                        </div>
-                    </details>
-                </div>
-            </div>
-
+            <button onclick="openModal('error-modal')" class="inline-flex items-center gap-2 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl text-xs text-slate-300 transition-colors">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                <span>자주 생기는 에러 해결</span>
+            </button>
         </div>
 
     </main>
@@ -261,6 +178,80 @@
     <footer class="border-t border-slate-800 bg-slate-900 py-6 text-center text-xs text-slate-500">
         <p>아두이노 정보·전자공학 실습 포털</p>
     </footer>
+
+    <!-- 모달 1: 코드 조각 복사 -->
+    <div id="snippet-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-5 shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-code text-cyan-400"></i>
+                    <h3 class="text-sm font-bold text-white">필수 아두이노 코드 조각</h3>
+                </div>
+                <button onclick="closeModal('snippet-modal')" class="text-slate-500 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="space-y-2 text-xs">
+                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-400">핀 입출력 설정</p>
+                        <code class="text-cyan-300 font-mono text-[11px]">pinMode(13, OUTPUT);</code>
+                    </div>
+                    <button onclick="copySnippet('pinMode(13, OUTPUT);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-400">디지털 출력 (HIGH)</p>
+                        <code class="text-cyan-300 font-mono text-[11px]">digitalWrite(13, HIGH);</code>
+                    </div>
+                    <button onclick="copySnippet('digitalWrite(13, HIGH);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-400">시리얼 통신 시작</p>
+                        <code class="text-cyan-300 font-mono text-[11px]">Serial.begin(9600);</code>
+                    </div>
+                    <button onclick="copySnippet('Serial.begin(9600);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-slate-400">1초 대기 (1000ms)</p>
+                        <code class="text-cyan-300 font-mono text-[11px]">delay(1000);</code>
+                    </div>
+                    <button onclick="copySnippet('delay(1000);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 모달 2: 에러 해결 가이드 -->
+    <div id="error-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-5 shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+                    <h3 class="text-sm font-bold text-white">자주 생기는 에러 해결법</h3>
+                </div>
+                <button onclick="closeModal('error-modal')" class="text-slate-500 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="space-y-3 text-xs">
+                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
+                    <p class="font-bold text-red-400 mb-1"><i class="fa-solid fa-plug mr-1.5"></i>업로드 실패 (stk500_getsync / Port Error)</p>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">
+                        아두이노 보드의 포트 연결이 끊겼거나 올바른 COM 포트가 선택되지 않은 경우입니다.<br>
+                        👉 <strong class="text-amber-400">툴 ➔ 포트(Port)</strong>에서 연결된 COM 포트를 다시 선택하세요.
+                    </p>
+                </div>
+                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
+                    <p class="font-bold text-red-400 mb-1"><i class="fa-solid fa-circle-xmark mr-1.5"></i>'was not declared in this scope' 에러</p>
+                    <p class="text-slate-400 text-[11px] leading-relaxed">
+                        변수/함수 이름 오탈자 또는 세미콜론(<code class="text-cyan-300">;</code>) 누락 시 발생합니다.<br>
+                        👉 대소문자 오탈자를 검사하고 문장 끝 세미콜론을 확인하세요.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 알림 토스트 팝업 -->
     <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white text-xs px-4 py-3 rounded-xl border border-slate-700 shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
@@ -274,6 +265,14 @@
             { title: '수행평가 과제 제출 마감', date: '2026-09-15' }
         ];
         let currentIndex = 0;
+
+        // 모달 열기/닫기
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
 
         // 코드 스니펫 복사 함수
         function copySnippet(text) {
