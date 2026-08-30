@@ -19,6 +19,22 @@
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
     </style>
+
+    <!-- PWA 설정 태그 -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#020617">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2693/2693507.png">
+
+<script>
+  // Service Worker 등록
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg => console.log('PWA 서비스 워커 등록 성공!'))
+        .catch(err => console.log('PWA 서비스 워커 등록 실패:', err));
+    });
+  }
+</script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
 
