@@ -1,6 +1,6 @@
 {
-  "card_dday": true,
-  "card_snippet": true,
-  "card_assignment": true,
-  "card_notice": true
+  "drive": true,
+  "classroom": true,
+  "tinkercad": true,
+  "answer": true
 }
