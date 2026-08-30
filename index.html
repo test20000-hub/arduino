@@ -27,9 +27,10 @@
         <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <!-- 학교 로고(icon/gpja.png) -->
-                <div class="w-11 h-11 bg-slate-800/80 border border-slate-700/50 rounded-xl overflow-hidden p-1 flex items-center justify-center shrink-0">
-                    <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain">
-                </div>
+                <!-- 기존 p-1을 p-0.5로 줄이고 scale-110 추가 -->
+            <div class="w-11 h-11 bg-slate-800/80 border border-slate-700/50 rounded-xl overflow-hidden p-0.5 flex items-center justify-center shrink-0">
+                <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
+            </div>
                 <div>
                     <h1 class="text-xl font-bold text-white">2026 군포중앙고등학교 정보 수업</h1>
                     <p class="text-xs text-slate-400">수업 및 과제 수행을 위한 빠른 이동 센터</p>
@@ -81,9 +82,10 @@
             <a href="./answer.html" 
                class="group bg-slate-900 border border-slate-800 hover:border-cyan-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between">
                 <div>
-                    <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
-                        <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain">
-                    </div>
+                    <!-- 기존 p-2를 p-0.5로 줄이고 scale-110 추가 -->
+                <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl overflow-hidden p-0.5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
+                    <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
+                </div>
                     <h3 class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">과제 3-2 정답 센터</h3>
                     <p class="text-xs text-slate-400 leading-relaxed">회로 분석 & 코드 문항별 정답 자동 조회 및 자가진단</p>
                 </div>
