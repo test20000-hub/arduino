@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Arduino 문법 검사기</title>
+<script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>body{font-family:'Noto Sans KR',sans-serif}.code{font-family:Consolas,'Courier New',monospace;tab-size:2}</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+<header class="border-b border-slate-800 bg-slate-900/90 sticky top-0 z-10"><div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between"><div><h1 class="font-bold text-lg"><i class="fa-solid fa-code text-cyan-400 mr-2"></i>Arduino 문법 검사기</h1><p class="text-xs text-slate-400 mt-1">기초 문법 오류와 자주 발생하는 Arduino 코드 문제를 검사합니다.</p></div><a href="./index.html" class="text-xs text-slate-400 hover:text-white"><i class="fa-solid fa-arrow-left mr-1"></i>돌아가기</a></div></header>
+<main class="max-w-5xl mx-auto px-4 py-6">
+<div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-4"><div class="flex flex-wrap gap-2 mb-3"><button onclick="loadExample()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs">예제 불러오기</button><button onclick="clearCode()" class="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs">지우기</button><button onclick="checkCode()" class="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs"><i class="fa-solid fa-magnifying-glass mr-1"></i>문법 검사</button></div><textarea id="code" spellcheck="false" class="code w-full h-96 resize-y rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-500 outline-none p-4 text-sm leading-6 text-slate-200" placeholder="Arduino 코드를 여기에 붙여넣으세요..."></textarea><div class="mt-2 text-[11px] text-slate-500">※ 브라우저에서 정적 분석을 수행합니다. 실제 Arduino IDE 컴파일과 100% 동일하지는 않습니다.</div></div>
+<div id="summary" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-4"></div>
+<div id="results" class="space-y-2"></div>
+</main>
+<script>
+const examples=`void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(1000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}`;
+function loadExample(){document.getElementById('code').value=examples;checkCode()}
+function clearCode(){document.getElementById('code').value='';document.getElementById('results').innerHTML='';document.getElementById('summary').classList.add('hidden')}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function stripStrings(line){return line.replace(/("(?:\\.|[^"\\])*")|(\/\/.*$)/g,'')}
+function checkCode(){
+ const code=document.getElementById('code').value; const lines=code.split(/\r?\n/); const issues=[]; const clean=lines.map(stripStrings).join('\n');
+ const add=(line,severity,title,msg,fix)=>issues.push({line,severity,title,msg,fix});
+ let brace=0,paren=0,bracket=0;
+ lines.forEach((raw,i)=>{const n=i+1,l=stripStrings(raw).replace(/\/\*.*?\*\//g,'');
+  const opens=(l.match(/{/g)||[]).length, closes=(l.match(/}/g)||[]).length; brace+=opens-closes;
+  const po=(l.match(/\(/g)||[]).length,pc=(l.match(/\)/g)||[]).length; paren+=po-pc;
+  const bo=(l.match(/\[/g)||[]).length,bc=(l.match(/\]/g)||[]).length; bracket+=bo-bc;
+  if(/\b(pinMode|digitalWrite|digitalRead|analogRead|analogWrite|delay|millis|micros|Serial\.begin|Serial\.print|Serial\.println)\s*\(/.test(l)&&!/;\s*$/.test(l)&&!/[{}]\s*$/.test(l)) add(n,'error','세미콜론 누락','문장의 끝에 세미콜론(;)이 필요할 가능성이 높습니다.','문장 끝에 ; 를 추가하세요.');
+  if(/\b(int|long|float|double|char|bool|boolean|byte|String)\s+[A-Za-z_]\w*\s*=.*[^;{}]$/.test(l.trim())) add(n,'error','세미콜론 누락','변수 선언/대입문 끝에 ;가 없습니다.','예: int value = 0;');
+  if(/\b(if|for|while|switch|catch)\s*\([^)]*\)\s*[^\s{;]/.test(l)&&!/\{\s*$/.test(l)) add(n,'warning','중괄호 확인','조건문/반복문의 블록을 { }로 감싸는 것을 권장합니다.','예: if (조건) { ... }');
+  if(/\b(Serial\.print|Serial\.println)\s*\(/.test(l)&&!clean.includes('Serial.begin')) add(n,'warning','Serial.begin() 확인','Serial 출력 전에 시리얼 통신 초기화가 필요할 수 있습니다.','setup()에 Serial.begin(9600);을 추가하세요.');
+  if(/\b(OUTPUT|INPUT|INPUT_PULLUP)\b/.test(l)&&!l.includes('pinMode')) add(n,'warning','pinMode 확인','핀 모드 상수는 일반적으로 pinMode()와 함께 사용합니다.','pinMode(pin, OUTPUT); 형태를 확인하세요.');
+  if(/analogWrite\s*\([^,]+,\s*([0-9]{4,})\s*\)/.test(l)) add(n,'warning','PWM 값 범위','일반 Arduino의 analogWrite 값은 보통 0~255 범위입니다.','0~255 범위인지 확인하세요.');
+  if(/digitalWrite\s*\([^,]+,\s*(0|1)\s*\)/.test(l)) add(n,'warning','HIGH/LOW 확인','digitalWrite에는 보통 HIGH 또는 LOW를 사용하는 것이 읽기 쉽습니다.','digitalWrite(pin, HIGH); 또는 LOW를 사용하세요.');
+  if(/\bdelay\s*\(\s*\)/.test(l)) add(n,'error','delay 인자 누락','delay()에는 대기 시간(ms)을 넣어야 합니다.','예: delay(1000);');
+  if(/\b(int|long|float|double|char|bool|boolean|byte|String)\s+[A-Za-z_]\w*\s*=\s*;/.test(l)) add(n,'error','초기값 누락','변수에 대입할 값이 없습니다.','예: int value = 0;');
+  if(/\b(Serial\.print|Serial\.println)\s*\(\s*\)/.test(l)) add(n,'warning','출력 내용 확인','빈 print 호출입니다. 의도한 코드인지 확인하세요.','출력할 값이나 문자열을 넣으세요.');
+  if(/\bvoid\s+setup\s*\(\s*\)/.test(l)===false&&/\bsetup\s*\(/.test(l)) add(n,'warning','setup 선언 확인','Arduino의 setup 함수는 일반적으로 void setup() 형태입니다.','void setup() { ... } 형태를 확인하세요.');
+  if(/\bvoid\s+loop\s*\(\s*\)/.test(l)===false&&/\bloop\s*\(/.test(l)) add(n,'warning','loop 선언 확인','Arduino의 loop 함수는 일반적으로 void loop() 형태입니다.','void loop() { ... } 형태를 확인하세요.');
+  if(/\b(pritnln|printIn|digtialWrite|digitalwrite|pinmode|analgoRead|analgoWrite|delayy)\b/.test(l)) add(n,'error','함수명 오타','Arduino 함수 이름으로 보이는 오타가 발견되었습니다.','digitalWrite, pinMode, analogRead, analogWrite, delay, Serial.println 등의 철자를 확인하세요.');
+  if(/\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP)\b/.test(l)&&/\bHIGHH|LOWW|OUTPU|INPU\b/.test(l)) add(n,'error','상수명 오타','Arduino 상수 이름을 확인하세요.','HIGH, LOW, OUTPUT, INPUT, INPUT_PULLUP');
+  if(/(^|\s)(if|else|for|while)\s+\(/.test(l)&&/;\s*$/.test(l)) add(n,'error','조건문 문법 확인','조건문 뒤에 불필요한 세미콜론이 있을 수 있습니다.','if (...) ; 가 아닌 if (...) { ... }인지 확인하세요.');
+  if(/\b(if|while)\s*\([^)]*(==|!=|<=|>=|<|>)[^)]*\)\s*;/.test(l)) add(n,'warning','조건문 종료 확인','조건식 바로 뒤의 ;는 블록을 실행하지 않게 만들 수 있습니다.','조건문 뒤의 세미콜론을 확인하세요.');
+ });
+ if(brace!==0)add(0,'error','중괄호 개수 불일치',`{ 와 }의 개수가 맞지 않습니다. 현재 차이: ${brace}`,'중괄호를 짝에 맞게 추가/삭제하세요.');
+ if(paren!==0)add(0,'error','소괄호 개수 불일치',`( 와 )의 개수가 맞지 않습니다. 현재 차이: ${paren}`,'함수 호출과 조건식의 괄호를 확인하세요.');
+ if(bracket!==0)add(0,'error','대괄호 개수 불일치',`[ 와 ]의 개수가 맞지 않습니다. 현재 차이: ${bracket}`,'배열 인덱스와 선언의 괄호를 확인하세요.');
+ if(code.trim()&&!/\bvoid\s+setup\s*\(\s*\)/.test(clean))add(0,'warning','setup() 없음','Arduino 스케치에는 일반적으로 setup() 함수가 필요합니다.','void setup() { } 를 확인하세요.');
+ if(code.trim()&&!/\bvoid\s+loop\s*\(\s*\)/.test(clean))add(0,'warning','loop() 없음','Arduino 스케치에는 일반적으로 loop() 함수가 필요합니다.','void loop() { } 를 확인하세요.');
+ render(issues,lines.length,code.trim());
+}
+function render(a,total,has){const s=document.getElementById('summary'),r=document.getElementById('results');s.classList.remove('hidden');const e=a.filter(x=>x.severity==='error').length,w=a.filter(x=>x.severity==='warning').length;s.innerHTML=`<div class="flex items-center justify-between"><div><b class="text-sm">검사 결과</b><span class="text-xs text-slate-400 ml-2">${total}줄</span></div><div class="text-xs"><span class="text-red-400 mr-3">오류 ${e}</span><span class="text-amber-400">경고 ${w}</span></div></div>`;if(!has){r.innerHTML='<div class="bg-slate-900 border border-slate-800 rounded-xl p-5 text-sm text-slate-400">코드를 입력한 뒤 검사해 주세요.</div>';return}if(!a.length){r.innerHTML='<div class="bg-slate-900 border border-emerald-500/30 rounded-xl p-5"><div class="font-bold text-emerald-400"><i class="fa-solid fa-circle-check mr-2"></i>발견된 주요 문법 문제가 없습니다.</div><p class="text-xs text-slate-400 mt-2">실제 보드 라이브러리, 핀 연결, 하드웨어 문제까지 검증하는 컴파일러는 아니므로 Arduino IDE에서 최종 컴파일을 권장합니다.</p></div>';return}r.innerHTML=a.map(x=>`<div class="bg-slate-900 border ${x.severity==='error'?'border-red-500/20':'border-amber-500/20'} rounded-xl p-4"><div class="flex items-start gap-3"><span class="text-[10px] px-2 py-1 rounded-md ${x.severity==='error'?'bg-red-500/10 text-red-400':'bg-amber-500/10 text-amber-400'}">${x.severity==='error'?'오류':'경고'}${x.line?' · '+x.line+'줄':''}</span><div class="min-w-0"><div class="font-bold text-sm">${esc(x.title)}</div><p class="text-xs text-slate-400 mt-1">${esc(x.msg)}</p>${x.fix?`<p class="text-xs text-cyan-400 mt-2"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i>${esc(x.fix)}</p>`:''}</div></div></div>`).join('')}
+</script></body></html>
