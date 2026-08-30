@@ -10,7 +10,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4">
 
-    <!-- 1. 비밀번호 입력 인증 폼 -->
+    <!-- 1. 인증 폼 -->
     <div id="auth-box" class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
         <div class="text-center mb-6">
             <div class="w-14 h-14 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl">
@@ -20,7 +20,7 @@
             <p class="text-xs text-slate-400 mt-1">D-Day 설정을 변경하려면 비밀번호를 입력하세요.</p>
         </div>
 
-        <form id="auth-form" onsubmit="checkAuth(event)" class="space-y-4">
+        <form onsubmit="checkAuth(event)" class="space-y-4">
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">비밀번호</label>
                 <input type="password" id="admin-password" placeholder="비밀번호 입력" 
@@ -37,44 +37,58 @@
         </div>
     </div>
 
-    <!-- 2. D-Day 설정 대시보드 (인증 성공 시 표시) -->
-    <div id="admin-panel" class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl hidden">
+    <!-- 2. 다중 D-Day 관리 대시보드 -->
+    <div id="admin-panel" class="max-w-lg w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl hidden">
         <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-sliders text-amber-400"></i>
-                <h2 class="text-lg font-bold text-white">D-Day 설정 관리</h2>
+                <h2 class="text-lg font-bold text-white">D-Day 멀티 설정 관리</h2>
             </div>
             <button onclick="logout()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition-colors">
                 로그아웃
             </button>
         </div>
 
-        <form onsubmit="saveDDay(event)" class="space-y-5">
+        <!-- 새 D-Day 추가 폼 -->
+        <form onsubmit="addDDay(event)" class="space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800/80 mb-6">
+            <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2"><i class="fa-solid fa-plus-circle mr-1"></i>새 D-Day 추가</h3>
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">과제 / 일정 제목</label>
-                <input type="text" id="input-title" required placeholder="예: 수행평가 과제 3-2 제출 마감" 
-                       class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors">
+                <input type="text" id="add-title" required placeholder="과제/일정 제목 (예: 수행평가 3-2)" 
+                       class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-500">
             </div>
-
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">마감 날짜 선택</label>
-                <input type="date" id="input-date" required 
-                       class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors">
+                <input type="date" id="add-date" required 
+                       class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-amber-500">
             </div>
-
-            <div class="pt-2 flex gap-3">
-                <a href="./index.html" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-3 rounded-xl transition-all text-center text-sm">
-                    취소
-                </a>
-                <button type="submit" class="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-lg shadow-amber-500/10 text-sm">
-                    저장하기
-                </button>
-            </div>
+            <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-lg transition-all text-xs">
+                목록에 추가하기
+            </button>
         </form>
+
+        <!-- 등록된 D-Day 리스트 -->
+        <div>
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xs font-bold text-slate-300">현재 등록된 D-Day 목록</h3>
+                <button onclick="removeAll()" class="text-[11px] text-red-400 hover:text-red-300"><i class="fa-solid fa-trash-can mr-1"></i>전체 삭제(숨기기)</button>
+            </div>
+            
+            <div id="dday-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                <!-- JS dynamic list -->
+            </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800">
+            <a href="./index.html" class="block w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-center font-bold py-2.5 rounded-xl transition-all text-xs">
+                <i class="fa-solid fa-check mr-1.5"></i>완료 및 메인으로 이동
+            </a>
+        </div>
     </div>
 
     <script>
-        const ADMIN_PW = "1456"; // 비밀번호 변경 원할 시 이 값을 수정하세요
+        const ADMIN_PW = "1234";
+        let ddays = JSON.parse(localStorage.getItem('ddays_list')) || [
+            { title: '수행평가 과제 제출 마감', date: '2026-09-15' }
+        ];
 
         function checkAuth(e) {
             e.preventDefault();
@@ -82,27 +96,64 @@
             if (inputPw === ADMIN_PW) {
                 document.getElementById('auth-box').classList.add('hidden');
                 document.getElementById('admin-panel').classList.remove('hidden');
-                loadCurrentSettings();
+                renderAdminList();
             } else {
                 document.getElementById('auth-error').classList.remove('hidden');
             }
         }
 
-        function loadCurrentSettings() {
-            document.getElementById('input-title').value = localStorage.getItem('dday_title') || '수행평가 과제 제출 마감';
-            document.getElementById('input-date').value = localStorage.getItem('dday_date') || '2026-09-15';
+        function renderAdminList() {
+            const container = document.getElementById('dday-list');
+            container.innerHTML = '';
+
+            if (ddays.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-500 border border-dashed border-slate-800 rounded-xl">등록된 D-Day가 없습니다.<br>(메인 화면에서 타이머가 숨겨집니다)</div>`;
+                return;
+            }
+
+            ddays.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between bg-slate-950 border border-slate-800 p-3 rounded-xl";
+                div.innerHTML = `
+                    <div class="overflow-hidden mr-2">
+                        <div class="text-xs font-bold text-white truncate">${item.title}</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${item.date}</div>
+                    </div>
+                    <button onclick="deleteDDay(${index})" class="text-red-400 hover:text-red-300 p-2 text-xs shrink-0" title="삭제">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(div);
+            });
         }
 
-        function saveDDay(e) {
+        function addDDay(e) {
             e.preventDefault();
-            const title = document.getElementById('input-title').value;
-            const date = document.getElementById('input-date').value;
+            const title = document.getElementById('add-title').value;
+            const date = document.getElementById('add-date').value;
 
-            localStorage.setItem('dday_title', title);
-            localStorage.setItem('dday_date', date);
+            ddays.push({ title, date });
+            saveAndRefresh();
 
-            alert('D-Day 설정이 저장되었습니다!');
-            window.location.href = './index.html';
+            document.getElementById('add-title').value = '';
+            document.getElementById('add-date').value = '';
+        }
+
+        function deleteDDay(index) {
+            ddays.splice(index, 1);
+            saveAndRefresh();
+        }
+
+        function removeAll() {
+            if (confirm('모든 D-Day 항목을 삭제하시겠습니까?\n메인 화면에서 배너가 완전히 사라집니다.')) {
+                ddays = [];
+                saveAndRefresh();
+            }
+        }
+
+        function saveAndRefresh() {
+            localStorage.setItem('ddays_list', JSON.stringify(ddays));
+            renderAdminList();
         }
 
         function logout() {
