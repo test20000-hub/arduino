@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 군포중앙고 정보수업</title>
+    <title>아두이노 실습 대시보드</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons CDN -->
@@ -12,8 +12,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <!-- 지구본 파비콘 방지용 이모지 파비콘 -->
-    <link rel="icon" href="https://fav.farm/🤖">
+    
+    <!-- 학교 로고를 파비콘으로 설정 -->
+    <link rel="icon" href="./gpja.png" type="image/png">
+    
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
     </style>
@@ -24,12 +26,13 @@
     <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="p-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-xl text-cyan-400">
-                    <i class="fa-solid fa-microchip text-2xl"></i>
+                <!-- 아이콘 대신 학교 로고(gpja.png)로 대체 -->
+                <div class="w-11 h-11 bg-slate-800/80 border border-slate-700/50 rounded-xl overflow-hidden p-1 flex items-center justify-center shrink-0">
+                    <img src="./gpja.png" alt="학교 로고" class="w-full h-full object-contain">
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-white">2026 군포중앙고등학교 정보 수업</h1>
-                    <p class="text-xs text-slate-400">수업 및 과제 수행을 위한 빠른 이동</p>
+                    <h1 class="text-xl font-bold text-white">아두이노 정보·전자공학 실습</h1>
+                    <p class="text-xs text-slate-400">수업 및 과제 수행을 위한 빠른 이동 센터</p>
                 </div>
             </div>
         </div>
