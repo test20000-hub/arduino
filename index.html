@@ -409,26 +409,24 @@
 
     // 페이지 진입 시 GitHub JSON 읽기 실행
     loadDDaysFromGithub();
-    // index.html 자바스크립트 영역
-async function applyCardSettings() {
+async function applyQuickLinkSettings() {
     try {
         const response = await fetch(`./settings.json?t=${new Date().getTime()}`);
         if (response.ok) {
             const settings = await response.json();
 
-            // ID에 해당하는 카드 엘리먼트 제어
-            toggleCardElement('card-dday-wrapper', settings.card_dday);
-            toggleCardElement('card-snippet-wrapper', settings.card_snippet);
-            toggleCardElement('card-assignment-wrapper', settings.card_assignment);
-            toggleCardElement('card-notice-wrapper', settings.card_notice);
+            toggleCard('quick-drive', settings.drive);
+            toggleCard('quick-classroom', settings.classroom);
+            toggleCard('quick-tinkercad', settings.tinkercad);
+            toggleCard('quick-answer', settings.answer);
         }
     } catch (err) {
-        console.error("카드 설정 로드 실패:", err);
+        console.error("설정 로드 실패:", err);
     }
 }
 
-function toggleCardElement(elementId, isVisible) {
-    const el = document.getElementById(elementId);
+function toggleCard(id, isVisible) {
+    const el = document.getElementById(id);
     if (!el) return;
     if (isVisible) {
         el.classList.remove('hidden');
@@ -437,10 +435,7 @@ function toggleCardElement(elementId, isVisible) {
     }
 }
 
-// 페이지 진입 시 실행
-window.addEventListener('DOMContentLoaded', () => {
-    applyCardSettings();
-});
+window.addEventListener('DOMContentLoaded', applyQuickLinkSettings);
 </script>
 </body>
 </html>
