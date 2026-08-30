@@ -10,7 +10,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-4">
 
-    <!-- 1. 인증 폼 -->
+    <!-- 1. 비밀번호 인증 폼 -->
     <div id="auth-box" class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
         <div class="text-center mb-6">
             <div class="w-14 h-14 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl">
@@ -42,7 +42,7 @@
         <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-sliders text-amber-400"></i>
-                <h2 class="text-lg font-bold text-white">D-Day 멀티 설정 관리</h2>
+                <h2 class="text-lg font-bold text-white">D-Day 관리 센터</h2>
             </div>
             <button onclick="logout()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition-colors">
                 로그아웃
@@ -68,8 +68,8 @@
         <!-- 등록된 D-Day 리스트 -->
         <div>
             <div class="flex items-center justify-between mb-3">
-                <h3 class="text-xs font-bold text-slate-300">현재 등록된 D-Day 목록</h3>
-                <button onclick="removeAll()" class="text-[11px] text-red-400 hover:text-red-300"><i class="fa-solid fa-trash-can mr-1"></i>전체 삭제(숨기기)</button>
+                <h3 class="text-xs font-bold text-slate-300">현재 활성화된 D-Day 목록</h3>
+                <button onclick="removeAll()" class="text-[11px] text-red-400 hover:text-red-300"><i class="fa-solid fa-trash-can mr-1"></i>전체 삭제</button>
             </div>
             
             <div id="dday-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
@@ -102,22 +102,54 @@
             }
         }
 
+        function filterExpired() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            ddays = ddays.filter(item => {
+                const target = new Date(item.date + 'T00:00:00');
+                const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+                return diffDays >= 0;
+            });
+            localStorage.setItem('ddays_list', JSON.stringify(ddays));
+        }
+
         function renderAdminList() {
+            filterExpired();
+
             const container = document.getElementById('dday-list');
             container.innerHTML = '';
 
             if (ddays.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-500 border border-dashed border-slate-800 rounded-xl">등록된 D-Day가 없습니다.<br>(메인 화면에서 타이머가 숨겨집니다)</div>`;
+                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-500 border border-dashed border-slate-800 rounded-xl">등록된 D-Day가 없거나 모두 만료되었습니다.<br>(메인 화면에서 D-Day 배너가 자동 숨김 처리됩니다)</div>`;
                 return;
             }
 
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
             ddays.forEach((item, index) => {
+                const target = new Date(item.date + 'T00:00:00');
+                const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+                let badgeClass = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+                let badgeText = `D-${diffDays}`;
+
+                if (diffDays < 3) {
+                    badgeClass = "bg-rose-500/20 text-rose-400 border-rose-500/30";
+                    badgeText = diffDays === 0 ? "D-DAY" : `D-${diffDays}`;
+                } else if (diffDays < 7) {
+                    badgeClass = "bg-amber-500/20 text-amber-400 border-amber-500/30";
+                }
+
                 const div = document.createElement('div');
                 div.className = "flex items-center justify-between bg-slate-950 border border-slate-800 p-3 rounded-xl";
                 div.innerHTML = `
-                    <div class="overflow-hidden mr-2">
-                        <div class="text-xs font-bold text-white truncate">${item.title}</div>
-                        <div class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${item.date}</div>
+                    <div class="overflow-hidden mr-2 flex items-center gap-2">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-md border ${badgeClass}">${badgeText}</span>
+                        <div>
+                            <div class="text-xs font-bold text-white truncate">${item.title}</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar mr-1"></i>${item.date}</div>
+                        </div>
                     </div>
                     <button onclick="deleteDDay(${index})" class="text-red-400 hover:text-red-300 p-2 text-xs shrink-0" title="삭제">
                         <i class="fa-solid fa-trash"></i>
@@ -145,7 +177,7 @@
         }
 
         function removeAll() {
-            if (confirm('모든 D-Day 항목을 삭제하시겠습니까?\n메인 화면에서 배너가 완전히 사라집니다.')) {
+            if (confirm('모든 D-Day 항목을 삭제하시겠습니까?')) {
                 ddays = [];
                 saveAndRefresh();
             }
