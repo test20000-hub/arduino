@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- icon 폴더 안의 학교 로고를 파비콘으로 설정 -->
+    <!-- 파비콘 -->
     <link rel="icon" href="./icon/gpja.png" type="image/png">
     
     <style>
@@ -26,51 +26,70 @@
     <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <!-- 학교 로고(icon/gpja.png) -->
-                <!-- 기존 p-1을 p-0.5로 줄이고 scale-110 추가 -->
-            <div class="w-11 h-11 bg-slate-800/80 border border-slate-700/50 rounded-xl overflow-hidden p-0.5 flex items-center justify-center shrink-0">
-                <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
-            </div>
+                <div class="w-11 h-11 bg-slate-800/80 border border-slate-700/50 rounded-xl overflow-hidden p-0.5 flex items-center justify-center shrink-0">
+                    <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
+                </div>
                 <div>
                     <h1 class="text-xl font-bold text-white">2026 군포중앙고등학교 정보 수업</h1>
                     <p class="text-xs text-slate-400">수업 및 과제 수행을 위한 빠른 이동 센터</p>
                 </div>
             </div>
+            <!-- 관리자 페이지 이동 버튼 (자물쇠 아이콘) -->
+            <a href="./admin.html" title="관리자 설정" class="text-slate-500 hover:text-slate-300 transition-colors p-2">
+                <i class="fa-solid fa-lock text-sm"></i>
+            </a>
         </div>
     </header>
 
+    <!-- D-Day 타이머 배너 영역 -->
+    <div class="max-w-6xl mx-auto px-4 pt-8 w-full">
+        <div class="bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
+            <div class="flex items-center gap-3 text-center sm:text-left">
+                <div class="w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded-xl flex items-center justify-center text-amber-400 shrink-0">
+                    <i class="fa-solid fa-clock text-lg"></i>
+                </div>
+                <div>
+                    <span id="dday-title" class="text-xs font-semibold text-amber-400 tracking-wider uppercase">과제 제출 마감</span>
+                    <h3 id="dday-target-text" class="text-sm sm:text-base font-bold text-white">마감일을 설정해주세요</h3>
+                </div>
+            </div>
+            <div id="dday-badge" class="bg-amber-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0">
+                D-DAY
+            </div>
+        </div>
+    </div>
+
     <!-- 메인 링크 카드리스트 -->
-    <main class="max-w-6xl mx-auto px-4 py-12 w-full flex-1 flex flex-col justify-center">
-        <div class="text-center mb-10">
+    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-1 flex flex-col justify-center">
+        <div class="text-center mb-8">
             <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">원하는 메뉴를 선택하세요</h2>
             <p class="text-sm text-slate-400">구글 드라이브, 클래스룸, 틴커캐드 회로 설계, 과제 정답 확인 페이지로 이동합니다.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
-            <!-- 0. 구글 드라이브 (SVG 직접 내장) -->
-<a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" 
-   class="group bg-slate-900 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 flex flex-col justify-between">
-    <div>
-        <div class="w-12 h-12 bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
-            <!-- 최신 구글 드라이브 SVG -->
-            <svg class="w-full h-full" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
-                <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
-                <path d="M43.65 25 29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
-                <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.5l5.85 11.45z" fill="#ea4335"/>
-                <path d="M43.65 25 57.4 1.2c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
-                <path d="M57.4 1.2 43.65 25l13.75 23.8h27.5c0-1.55-.4-3.1-1.2-4.5l-25.4-44c-.8-1.4-1.95-2.5-3.3-3.3z" fill="#ffba00"/>
-                <path d="M27.5 50 13.75 73.8c1.35.8 2.9 1.2 4.5 1.2h50.9c1.6 0 3.15-.45 4.5-1.2l-13.75-23.8z" fill="#2684fc"/>
-            </svg>
-        </div>
-        <h3 class="text-lg font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">구글 드라이브</h3>
-        <p class="text-xs text-slate-400 leading-relaxed">수업 관련 클라우드 파일 보관함 및 드라이브 바로가기</p>
-    </div>
-    <div class="mt-6 text-xs font-semibold text-blue-400 flex items-center gap-1">
-        바로가기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-    </div>
-</a>
             
+            <!-- 0. 구글 드라이브 -->
+            <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" 
+               class="group bg-slate-900 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 flex flex-col justify-between">
+                <div>
+                    <div class="w-12 h-12 bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
+                        <svg class="w-full h-full" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
+                            <path d="M43.65 25 29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
+                            <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.5l5.85 11.45z" fill="#ea4335"/>
+                            <path d="M43.65 25 57.4 1.2c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
+                            <path d="M57.4 1.2 43.65 25l13.75 23.8h27.5c0-1.55-.4-3.1-1.2-4.5l-25.4-44c-.8-1.4-1.95-2.5-3.3-3.3z" fill="#ffba00"/>
+                            <path d="M27.5 50 13.75 73.8c1.35.8 2.9 1.2 4.5 1.2h50.9c1.6 0 3.15-.45 4.5-1.2l-13.75-23.8z" fill="#2684fc"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">구글 드라이브</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">수업 관련 클라우드 파일 보관함 및 드라이브 바로가기</p>
+                </div>
+                <div class="mt-6 text-xs font-semibold text-blue-400 flex items-center gap-1">
+                    바로가기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </a>
+
             <!-- 1. 구글 클래스룸 -->
             <a href="https://classroom.google.com/c/ODcyMDYwNjQxNDY5" target="_blank" rel="noopener noreferrer" 
                class="group bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10 flex flex-col justify-between">
@@ -86,7 +105,7 @@
                 </div>
             </a>
 
-            <!-- 2. 틴커캐드 (크기 통일 수정) -->
+            <!-- 2. 틴커캐드 -->
             <a href="https://www.tinkercad.com/dashboard/designs/circuits" target="_blank" rel="noopener noreferrer" 
                class="group bg-slate-900 border border-slate-800 hover:border-amber-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col justify-between">
                 <div>
@@ -105,10 +124,9 @@
             <a href="./answer.html" 
                class="group bg-slate-900 border border-slate-800 hover:border-cyan-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between">
                 <div>
-                    <!-- 기존 p-2를 p-0.5로 줄이고 scale-110 추가 -->
-                <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl overflow-hidden p-0.5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
-                    <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
-                </div>
+                    <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl overflow-hidden p-0.5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
+                        <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
+                    </div>
                     <h3 class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">과제 3-2 정답 센터</h3>
                     <p class="text-xs text-slate-400 leading-relaxed">회로 분석 & 코드 문항별 정답 자동 조회 및 자가진단</p>
                 </div>
@@ -125,5 +143,37 @@
         <p>아두이노 정보·전자공학 실습 포털</p>
     </footer>
 
+    <!-- D-Day 계산 스크립트 -->
+    <script>
+        function updateDDay() {
+            const savedTitle = localStorage.getItem('dday_title') || '수행평가 과제 제출 마감';
+            const savedDate = localStorage.getItem('dday_date') || '2026-09-15';
+
+            document.getElementById('dday-title').innerText = savedTitle;
+
+            const target = new Date(savedDate + 'T00:00:00');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const diffTime = target - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            document.getElementById('dday-target-text').innerText = `${savedDate} 까지`;
+
+            const badge = document.getElementById('dday-badge');
+            if (diffDays > 0) {
+                badge.innerText = `D-${diffDays}`;
+                badge.className = "bg-amber-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0";
+            } else if (diffDays === 0) {
+                badge.innerText = `D-DAY`;
+                badge.className = "bg-red-500 text-white font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0 animate-pulse";
+            } else {
+                badge.innerText = `마감됨`;
+                badge.className = "bg-slate-700 text-slate-400 font-bold text-base px-4 py-2 rounded-xl shrink-0";
+            }
+        }
+
+        updateDDay();
+    </script>
 </body>
 </html>
