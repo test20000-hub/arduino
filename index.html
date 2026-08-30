@@ -20,13 +20,12 @@
         body { font-family: 'Noto Sans KR', sans-serif; }
     </style>
 
-    <!-- PWA 설정 태그 -->
+<!-- PWA 설정 태그 (학교 로고 gpja.png 적용) -->
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#020617">
-<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2693/2693507.png">
+<link rel="apple-touch-icon" href="./gpja.png">
 
 <script>
-  // Service Worker 등록
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js')
