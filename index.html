@@ -34,28 +34,46 @@
                     <p class="text-xs text-slate-400">수업 및 과제 수행을 위한 빠른 이동 센터</p>
                 </div>
             </div>
-            <!-- 관리자 페이지 이동 버튼 (자물쇠 아이콘) -->
+            <!-- 관리자 페이지 이동 버튼 -->
             <a href="./admin.html" title="관리자 설정" class="text-slate-500 hover:text-slate-300 transition-colors p-2">
                 <i class="fa-solid fa-lock text-sm"></i>
             </a>
         </div>
     </header>
 
-    <!-- D-Day 타이머 배너 영역 -->
-    <div class="max-w-6xl mx-auto px-4 pt-8 w-full">
-        <div class="bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
-            <div class="flex items-center gap-3 text-center sm:text-left">
-                <div class="w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded-xl flex items-center justify-center text-amber-400 shrink-0">
-                    <i class="fa-solid fa-clock text-lg"></i>
+    <!-- D-Day 타이머 슬라이더 영역 (항목이 없으면 자동으로 완전히 감춰짐) -->
+    <div id="dday-wrapper" class="max-w-6xl mx-auto px-4 pt-8 w-full hidden">
+        <div class="relative bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-lg shadow-amber-500/5 min-h-[90px]">
+            
+            <!-- 왼쪽 이동 화살표 -->
+            <button id="dday-prev-btn" onclick="prevDDay()" class="z-10 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-amber-400 flex items-center justify-center transition-colors shrink-0 mr-2">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+
+            <!-- D-Day 메인 콘텐츠 영역 -->
+            <div class="flex-1 flex flex-col sm:flex-row items-center justify-between gap-4 px-2 overflow-hidden">
+                <div class="flex items-center gap-3 text-center sm:text-left">
+                    <div class="w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded-xl flex items-center justify-center text-amber-400 shrink-0">
+                        <i class="fa-solid fa-clock text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-center sm:justify-start gap-2">
+                            <span id="dday-title" class="text-xs font-semibold text-amber-400 tracking-wider uppercase">과제 제출 마감</span>
+                            <span id="dday-counter" class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full">1/1</span>
+                        </div>
+                        <h3 id="dday-target-text" class="text-sm sm:text-base font-bold text-white mt-0.5">마감일을 설정해주세요</h3>
+                    </div>
                 </div>
-                <div>
-                    <span id="dday-title" class="text-xs font-semibold text-amber-400 tracking-wider uppercase">과제 제출 마감</span>
-                    <h3 id="dday-target-text" class="text-sm sm:text-base font-bold text-white">마감일을 설정해주세요</h3>
+                <div id="dday-badge" class="bg-amber-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0">
+                    D-DAY
                 </div>
             </div>
-            <div id="dday-badge" class="bg-amber-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0">
-                D-DAY
-            </div>
+
+            <!-- 오른쪽 이동 화살표 -->
+            <button id="dday-next-btn" onclick="nextDDay()" class="z-10 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-amber-400 flex items-center justify-center transition-colors shrink-0 ml-2">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+            </button>
+
         </div>
     </div>
 
@@ -143,22 +161,45 @@
         <p>아두이노 정보·전자공학 실습 포털</p>
     </footer>
 
-    <!-- D-Day 계산 스크립트 -->
+    <!-- 슬라이드 처리 및 D-Day 로직 스크립트 -->
     <script>
-        function updateDDay() {
-            const savedTitle = localStorage.getItem('dday_title') || '수행평가 과제 제출 마감';
-            const savedDate = localStorage.getItem('dday_date') || '2026-09-15';
+        let ddays = JSON.parse(localStorage.getItem('ddays_list')) || [
+            { title: '수행평가 과제 제출 마감', date: '2026-09-15' }
+        ];
+        let currentIndex = 0;
 
-            document.getElementById('dday-title').innerText = savedTitle;
+        function renderDDay() {
+            const wrapper = document.getElementById('dday-wrapper');
+            if (!ddays || ddays.length === 0) {
+                wrapper.classList.add('hidden');
+                return;
+            }
 
-            const target = new Date(savedDate + 'T00:00:00');
+            wrapper.classList.remove('hidden');
+
+            // 버튼 표시 제어
+            const prevBtn = document.getElementById('dday-prev-btn');
+            const nextBtn = document.getElementById('dday-next-btn');
+            if (ddays.length <= 1) {
+                prevBtn.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            } else {
+                prevBtn.classList.remove('hidden');
+                nextBtn.classList.remove('hidden');
+            }
+
+            const current = ddays[currentIndex];
+            document.getElementById('dday-title').innerText = current.title;
+            document.getElementById('dday-counter').innerText = `${currentIndex + 1}/${ddays.length}`;
+
+            const target = new Date(current.date + 'T00:00:00');
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
             const diffTime = target - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            document.getElementById('dday-target-text').innerText = `${savedDate} 까지`;
+            document.getElementById('dday-target-text').innerText = `${current.date} 까지`;
 
             const badge = document.getElementById('dday-badge');
             if (diffDays > 0) {
@@ -173,7 +214,19 @@
             }
         }
 
-        updateDDay();
+        function prevDDay() {
+            if (ddays.length === 0) return;
+            currentIndex = (currentIndex - 1 + ddays.length) % ddays.length;
+            renderDDay();
+        }
+
+        function nextDDay() {
+            if (ddays.length === 0) return;
+            currentIndex = (currentIndex + 1) % ddays.length;
+            renderDDay();
+        }
+
+        renderDDay();
     </script>
 </body>
 </html>
