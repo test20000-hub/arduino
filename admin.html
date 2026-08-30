@@ -7,7 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Noto Sans KR', sans-serif; }</style>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        /* 캘린더 아이콘 및 커스텀 스타일 */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            filter: invert(0.8);
+        }
+    </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
 
@@ -24,7 +31,7 @@
         </div>
     </header>
 
-    <!-- 1. 관리자 로그인 모달/상자 (접속 시 표시) -->
+    <!-- 1. 비밀번호 로그인 단속 영역 -->
     <div id="login-section" class="max-w-md mx-auto my-auto px-4 py-8 w-full">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl text-center">
             <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl flex items-center justify-center mx-auto mb-4 text-cyan-400 text-xl">
@@ -42,7 +49,7 @@
         </div>
     </div>
 
-    <!-- 2. 관리자 메인 컨텐츠 (로그인 성공 시 표시) -->
+    <!-- 2. 관리자 메인 영역 (로그인 성공 시 출력) -->
     <main id="admin-main-section" class="max-w-4xl mx-auto px-4 py-8 w-full flex-1 space-y-6 hidden">
 
         <!-- A. GitHub 연동 설정 카드 -->
@@ -58,7 +65,7 @@
             
             <div id="github-config-box" class="space-y-4 pt-2">
                 <p class="text-xs text-slate-400">
-                    GitHub API를 통해 <code class="text-amber-300">ddays.json</code> 파일(DB)을 수정합니다. 설정 정보는 브라우저에 자동 저장됩니다.
+                    GitHub API를 통해 <code class="text-amber-300">ddays.json</code> 파일(DB)을 수정합니다. 설정 정보는 브라우저에 저장됩니다.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     <div>
@@ -80,19 +87,32 @@
             </div>
         </div>
 
-        <!-- B. 새 D-Day 추가 폼 -->
+        <!-- B. 새 D-Day 추가 폼 (날짜 캘린더 + 교시 설정) -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
             <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
                 <i class="fa-solid fa-plus text-emerald-400"></i> 새 D-Day 일정 추가
             </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                 <div>
                     <label class="block text-slate-400 mb-1">일정 제목</label>
                     <input type="text" id="new-title" placeholder="예: 수행평가 2차 제출" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500">
                 </div>
                 <div>
-                    <label class="block text-slate-400 mb-1">마감 날짜</label>
-                    <input type="date" id="new-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500">
+                    <label class="block text-slate-400 mb-1">마감 날짜 (캘린더 선택)</label>
+                    <input type="date" id="new-date" onclick="this.showPicker()" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500 cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1">마감 교시</label>
+                    <select id="new-time" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500 cursor-pointer">
+                        <option value="1교시">1교시 시작 전</option>
+                        <option value="2교시">2교시 시작 전</option>
+                        <option value="3교시">3교시 시작 전</option>
+                        <option value="4교시">4교시 시작 전</option>
+                        <option value="5교시">5교시 시작 전</option>
+                        <option value="6교시">6교시 시작 전</option>
+                        <option value="7교시" selected>7교시 마감 (종례 전)</option>
+                        <option value="자율(24시)">자정 (23:59) 마감</option>
+                    </select>
                 </div>
             </div>
             <button onclick="addDDay()" class="mt-4 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors">
@@ -135,13 +155,12 @@
     </div>
 
     <script>
-        // 🔑 관리자 비밀번호 설정 (원하는 비밀번호로 수정하세요)
+        // 🔑 관리자 비밀번호 (필요시 변경하세요)
         const ADMIN_PASSWORD = "0511";
 
         let ddays = [];
         let fileSha = "";
 
-        // 로그인 처리
         function handleLogin(e) {
             e.preventDefault();
             const pass = document.getElementById('admin-pass-input').value;
@@ -155,8 +174,9 @@
             }
         }
 
-        // 초기화
         function initAdmin() {
+            document.getElementById('github-config-box').classList.remove('hidden');
+
             document.getElementById('gh-owner').value = localStorage.getItem('gh_owner') || '';
             document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
             document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
@@ -176,8 +196,7 @@
         }
 
         function toggleGithubConfig() {
-            const box = document.getElementById('github-config-box');
-            box.classList.toggle('hidden');
+            document.getElementById('github-config-box').classList.toggle('hidden');
         }
 
         function saveConfig() {
@@ -193,7 +212,6 @@
             fetchFromGithub();
         }
 
-        // GitHub DB 읽기
         async function fetchFromGithub() {
             const owner = localStorage.getItem('gh_owner');
             const repo = localStorage.getItem('gh_repo');
@@ -218,7 +236,7 @@
                     ddays = [];
                     fileSha = "";
                     renderList();
-                    showToast("ddays.json 파일이 없습니다. 새 일정을 저장하면 파일이 생성됩니다.");
+                    showToast("ddays.json 파일이 새로 작성될 예정입니다.");
                 } else {
                     showToast("GitHub 데이터를 불러오지 못했습니다. 설정 정보를 확인하세요.");
                 }
@@ -239,7 +257,8 @@
                 <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
                     <div>
                         <span class="font-bold text-white text-sm">${item.title}</span>
-                        <span class="text-slate-400 text-xs ml-2">(${item.date} 까지)</span>
+                        <span class="text-amber-400 font-semibold text-xs ml-2">[${item.time || '7교시'}]</span>
+                        <span class="text-slate-400 text-xs ml-1">(${item.date} 까지)</span>
                     </div>
                     <button onclick="deleteDDay(${index})" class="text-rose-400 hover:text-rose-300 p-1">
                         <i class="fa-solid fa-trash-can"></i> 삭제
@@ -251,13 +270,14 @@
         function addDDay() {
             const title = document.getElementById('new-title').value.trim();
             const date = document.getElementById('new-date').value;
+            const time = document.getElementById('new-time').value;
 
             if (!title || !date) {
-                alert("제목과 날짜를 입력해 주세요.");
+                alert("제목과 날짜를 지정해주세요.");
                 return;
             }
 
-            ddays.push({ title, date });
+            ddays.push({ title, date, time });
             renderList();
 
             document.getElementById('new-title').value = '';
@@ -270,7 +290,6 @@
             renderList();
         }
 
-        // GitHub DB 원격 저장 (Commit)
         async function commitToGithub() {
             const owner = localStorage.getItem('gh_owner');
             const repo = localStorage.getItem('gh_repo');
@@ -312,7 +331,7 @@
                     showToast("✅ 성공! GitHub DB에 저장되었습니다.");
                 } else {
                     const errorErr = await response.json();
-                    alert("저장 실패: " + (errorErr.message || "권한 또는 설정 문제"));
+                    alert("저장 실패: " + (errorErr.message || "권한 문제"));
                 }
             } catch (err) {
                 console.error(err);
