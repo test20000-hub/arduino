@@ -9,11 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; }
-        /* 캘린더 아이콘 및 커스텀 스타일 */
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            cursor: pointer;
-            filter: invert(0.8);
-        }
+        input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; filter: invert(0.8); }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
@@ -31,7 +27,7 @@
         </div>
     </header>
 
-    <!-- 1. 비밀번호 로그인 단속 영역 -->
+    <!-- 1. 로그인 섹션 -->
     <div id="login-section" class="max-w-md mx-auto my-auto px-4 py-8 w-full">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl text-center">
             <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl flex items-center justify-center mx-auto mb-4 text-cyan-400 text-xl">
@@ -49,7 +45,7 @@
         </div>
     </div>
 
-    <!-- 2. 관리자 메인 영역 (로그인 성공 시 출력) -->
+    <!-- 2. 관리자 메인 영역 -->
     <main id="admin-main-section" class="max-w-4xl mx-auto px-4 py-8 w-full flex-1 space-y-6 hidden">
 
         <!-- A. GitHub 연동 설정 카드 -->
@@ -59,13 +55,13 @@
                     <i class="fa-brands fa-github"></i> GitHub 연동 설정 (DB 연결)
                 </h2>
                 <button onclick="toggleGithubConfig()" class="text-xs text-slate-400 hover:text-slate-200">
-                    <i class="fa-solid fa-sliders mr-1"></i> <span id="config-toggle-text">접기/열기</span>
+                    <i class="fa-solid fa-sliders mr-1"></i> <span>접기/열기</span>
                 </button>
             </div>
             
             <div id="github-config-box" class="space-y-4 pt-2">
                 <p class="text-xs text-slate-400">
-                    GitHub API를 통해 <code class="text-amber-300">ddays.json</code> 파일(DB)을 수정합니다. 설정 정보는 브라우저에 저장됩니다.
+                    GitHub API를 통해 데이터를 원격 수정합니다. 설정 정보는 브라우저에 자동 저장됩니다.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
                     <div>
@@ -87,7 +83,44 @@
             </div>
         </div>
 
-        <!-- B. 새 D-Day 추가 폼 (날짜 캘린더 + 교시 설정) -->
+        <!-- B. 빠른 이동 카드 ON/OFF 제어 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-toggle-on text-cyan-400"></i> 빠른 이동 카드 노출 설정 (ON / OFF)
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="font-semibold text-slate-200">D-Day 카운터</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-dday" class="sr-only peer" checked>
+                        <div class="w-9 h-5 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                    </label>
+                </div>
+                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="font-semibold text-slate-200">코드 스니핏 카드</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-snippet" class="sr-only peer" checked>
+                        <div class="w-9 h-5 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                    </label>
+                </div>
+                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="font-semibold text-slate-200">과제 제출 카드</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-assignment" class="sr-only peer" checked>
+                        <div class="w-9 h-5 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                    </label>
+                </div>
+                <div class="flex items-center justify-between bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <span class="font-semibold text-slate-200">공지사항 카드</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-notice" class="sr-only peer" checked>
+                        <div class="w-9 h-5 bg-slate-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- C. 새 D-Day 추가 폼 -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
             <h2 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
                 <i class="fa-solid fa-plus text-emerald-400"></i> 새 D-Day 일정 추가
@@ -120,7 +153,7 @@
             </button>
         </div>
 
-        <!-- C. 현재 등록된 D-Day 목록 -->
+        <!-- D. D-Day 목록 및 최종 저장 -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-sm font-bold text-white flex items-center gap-2">
@@ -136,35 +169,32 @@
             </div>
 
             <div class="mt-6 pt-4 border-t border-slate-800 flex justify-end">
-                <button onclick="commitToGithub()" id="save-btn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-lg shadow-cyan-500/20 flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> GitHub DB에 최종 저장
+                <button onclick="commitAllToGithub()" id="save-btn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-lg shadow-cyan-500/20 flex items-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> GitHub DB에 전체 설정 최종 저장
                 </button>
             </div>
         </div>
 
     </main>
 
-    <!-- 푸터 -->
     <footer class="border-t border-slate-800 bg-slate-900 py-6 text-center text-xs text-slate-500">
         <p>군포중앙고등학교 정보수업 관리자 페이지</p>
     </footer>
 
-    <!-- 알림 토스트 -->
     <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white text-xs px-4 py-3 rounded-xl border border-slate-700 shadow-2xl opacity-0 pointer-events-none transition-all duration-300">
         <span id="toast-msg">성공적으로 처리되었습니다.</span>
     </div>
 
     <script>
-        // 🔑 관리자 비밀번호 (필요시 변경하세요)
         const ADMIN_PASSWORD = "0511";
 
         let ddays = [];
-        let fileSha = "";
+        let ddaySha = "";
+        let settingsSha = "";
 
         function handleLogin(e) {
             e.preventDefault();
-            const pass = document.getElementById('admin-pass-input').value;
-            if (pass === ADMIN_PASSWORD) {
+            if (document.getElementById('admin-pass-input').value === ADMIN_PASSWORD) {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('admin-main-section').classList.remove('hidden');
                 initAdmin();
@@ -175,16 +205,12 @@
         }
 
         function initAdmin() {
-            document.getElementById('github-config-box').classList.remove('hidden');
-
             document.getElementById('gh-owner').value = localStorage.getItem('gh_owner') || '';
             document.getElementById('gh-repo').value = localStorage.getItem('gh_repo') || '';
             document.getElementById('gh-token').value = localStorage.getItem('gh_token') || '';
 
             if (localStorage.getItem('gh_owner') && localStorage.getItem('gh_repo') && localStorage.getItem('gh_token')) {
                 fetchFromGithub();
-            } else {
-                document.getElementById('dday-list-box').innerHTML = `<p class="text-amber-400 text-center py-4">상단의 GitHub 연동 설정을 완료해 주세요.</p>`;
             }
         }
 
@@ -200,14 +226,9 @@
         }
 
         function saveConfig() {
-            const owner = document.getElementById('gh-owner').value.trim();
-            const repo = document.getElementById('gh-repo').value.trim();
-            const token = document.getElementById('gh-token').value.trim();
-
-            localStorage.setItem('gh_owner', owner);
-            localStorage.setItem('gh_repo', repo);
-            localStorage.setItem('gh_token', token);
-
+            localStorage.setItem('gh_owner', document.getElementById('gh-owner').value.trim());
+            localStorage.setItem('gh_repo', document.getElementById('gh-repo').value.trim());
+            localStorage.setItem('gh_token', document.getElementById('gh-token').value.trim());
             showToast("GitHub 연동 정보가 저장되었습니다.");
             fetchFromGithub();
         }
@@ -216,34 +237,38 @@
             const owner = localStorage.getItem('gh_owner');
             const repo = localStorage.getItem('gh_repo');
             const token = localStorage.getItem('gh_token');
-
             if (!owner || !repo || !token) return;
 
+            // 1. ddays.json 로드
             try {
-                const url = `https://api.github.com/repos/${owner}/${repo}/contents/ddays.json`;
-                const response = await fetch(url, {
-                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/ddays.json`, {
+                    headers: { 'Authorization': `token ${token}` }
                 });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    fileSha = data.sha;
-                    const content = decodeURIComponent(escape(atob(data.content)));
-                    ddays = JSON.parse(content);
+                if (res.ok) {
+                    const data = await res.json();
+                    ddaySha = data.sha;
+                    ddays = JSON.parse(decodeURIComponent(escape(atob(data.content))));
                     renderList();
-                    showToast("GitHub DB에서 데이터를 불러왔습니다.");
-                } else if (response.status === 404) {
-                    ddays = [];
-                    fileSha = "";
-                    renderList();
-                    showToast("ddays.json 파일이 새로 작성될 예정입니다.");
-                } else {
-                    showToast("GitHub 데이터를 불러오지 못했습니다. 설정 정보를 확인하세요.");
                 }
-            } catch (err) {
-                console.error(err);
-                showToast("네트워크 오류가 발생했습니다.");
-            }
+            } catch (err) { console.error(err); }
+
+            // 2. settings.json 로드
+            try {
+                const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/settings.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    settingsSha = data.sha;
+                    const settings = JSON.parse(decodeURIComponent(escape(atob(data.content))));
+                    document.getElementById('toggle-dday').checked = settings.card_dday ?? true;
+                    document.getElementById('toggle-snippet').checked = settings.card_snippet ?? true;
+                    document.getElementById('toggle-assignment').checked = settings.card_assignment ?? true;
+                    document.getElementById('toggle-notice').checked = settings.card_notice ?? true;
+                }
+            } catch (err) { console.error(err); }
+
+            showToast("GitHub DB에서 최신 설정을 불러왔습니다.");
         }
 
         function renderList() {
@@ -252,7 +277,6 @@
                 listBox.innerHTML = `<p class="text-slate-500 text-center py-4">등록된 D-Day 일정이 없습니다.</p>`;
                 return;
             }
-
             listBox.innerHTML = ddays.map((item, index) => `
                 <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between">
                     <div>
@@ -272,14 +296,9 @@
             const date = document.getElementById('new-date').value;
             const time = document.getElementById('new-time').value;
 
-            if (!title || !date) {
-                alert("제목과 날짜를 지정해주세요.");
-                return;
-            }
-
+            if (!title || !date) { alert("제목과 날짜를 입력해주세요."); return; }
             ddays.push({ title, date, time });
             renderList();
-
             document.getElementById('new-title').value = '';
             document.getElementById('new-date').value = '';
             showToast("목록에 추가되었습니다. 하단 저장 버튼을 눌러주세요.");
@@ -290,55 +309,57 @@
             renderList();
         }
 
-        async function commitToGithub() {
+        // 전체 저장 (ddays.json & settings.json)
+        async function commitAllToGithub() {
             const owner = localStorage.getItem('gh_owner');
             const repo = localStorage.getItem('gh_repo');
             const token = localStorage.getItem('gh_token');
-
-            if (!owner || !repo || !token) {
-                alert("GitHub 연동 정보를 먼저 설정 및 저장해주세요.");
-                return;
-            }
+            if (!owner || !repo || !token) { alert("GitHub 연동 설정을 먼저 진행하세요."); return; }
 
             const saveBtn = document.getElementById('save-btn');
             saveBtn.disabled = true;
-            saveBtn.innerText = "GitHub DB 업로드 중...";
+            saveBtn.innerText = "업로드 중...";
 
             try {
-                const url = `https://api.github.com/repos/${owner}/${repo}/contents/ddays.json`;
-                const jsonString = JSON.stringify(ddays, null, 2);
-                const encodedContent = btoa(unescape(encodeURIComponent(jsonString)));
-
-                const bodyData = {
-                    message: "Update ddays.json via Admin Panel",
-                    content: encodedContent
+                // 저장 1: ddays.json
+                const ddayBody = {
+                    message: "Update ddays.json via Admin",
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(ddays, null, 2))))
                 };
-                if (fileSha) bodyData.sha = fileSha;
-
-                const response = await fetch(url, {
+                if (ddaySha) ddayBody.sha = ddaySha;
+                const resDday = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/ddays.json`, {
                     method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify(bodyData)
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ddayBody)
                 });
+                if (resDday.ok) ddaySha = (await resDday.json()).content.sha;
 
-                if (response.ok) {
-                    const result = await response.json();
-                    fileSha = result.content.sha;
-                    showToast("✅ 성공! GitHub DB에 저장되었습니다.");
-                } else {
-                    const errorErr = await response.json();
-                    alert("저장 실패: " + (errorErr.message || "권한 문제"));
-                }
+                // 저장 2: settings.json
+                const settingsData = {
+                    card_dday: document.getElementById('toggle-dday').checked,
+                    card_snippet: document.getElementById('toggle-snippet').checked,
+                    card_assignment: document.getElementById('toggle-assignment').checked,
+                    card_notice: document.getElementById('toggle-notice').checked
+                };
+                const settingBody = {
+                    message: "Update settings.json via Admin",
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(settingsData, null, 2))))
+                };
+                if (settingsSha) settingBody.sha = settingsSha;
+                const resSetting = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/settings.json`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settingBody)
+                });
+                if (resSetting.ok) settingsSha = (await resSetting.json()).content.sha;
+
+                showToast("✅ 성공! GitHub DB에 모든 변경사항이 반영되었습니다.");
             } catch (err) {
                 console.error(err);
-                alert("네트워크 오류가 발생했습니다.");
+                alert("저장 중 오류가 발생했습니다.");
             } finally {
                 saveBtn.disabled = false;
-                saveBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> GitHub DB에 최종 저장`;
+                saveBtn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> GitHub DB에 전체 설정 최종 저장`;
             }
         }
     </script>
