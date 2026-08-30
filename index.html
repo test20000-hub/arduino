@@ -1,400 +1,135 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 정보수업</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
-    
-    <!-- 파비콘 -->
-    <link rel="icon" href="./icon/gpja.png" type="image/png">
-    
-    <style>
-        body { font-family: 'Noto Sans KR', sans-serif; }
-    </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
+<script>
+    let ddays = [];
+    let currentIndex = 0;
 
-    <!-- 상단 헤더 -->
-    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-11 h-11 bg-slate-800/80 border border-slate-700/50 rounded-xl overflow-hidden p-0.5 flex items-center justify-center shrink-0">
-                    <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white">2026 군포중앙고등학교 정보 수업</h1>
-                    <p class="text-xs text-slate-400">수업 및 과제 수행을 위한 빠른 이동 센터</p>
-                </div>
-            </div>
-            <!-- 관리자 페이지 이동 버튼 -->
-            <a href="./admin.html" title="관리자 설정" class="text-slate-500 hover:text-slate-300 transition-colors p-2">
-                <i class="fa-solid fa-lock text-sm"></i>
-            </a>
-        </div>
-    </header>
-
-    <!-- D-Day 타이머 슬라이더 영역 -->
-    <div id="dday-wrapper" class="max-w-6xl mx-auto px-4 pt-8 w-full hidden">
-        <div id="dday-card" class="relative border rounded-2xl p-4 sm:p-5 flex items-center justify-between transition-all duration-300 min-h-[90px]">
-            
-            <!-- 왼쪽 이동 화살표 -->
-            <button id="dday-prev-btn" onclick="prevDDay()" class="z-10 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition-colors shrink-0 mr-2">
-                <i class="fa-solid fa-chevron-left text-xs"></i>
-            </button>
-
-            <!-- D-Day 콘텐츠 영역 -->
-            <div class="flex-1 flex flex-col sm:flex-row items-center justify-between gap-4 px-2 overflow-hidden">
-                <div class="flex items-center gap-3 text-center sm:text-left">
-                    <div id="dday-icon-box" class="w-10 h-10 border rounded-xl flex items-center justify-center shrink-0">
-                        <i class="fa-solid fa-clock text-lg"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-center sm:justify-start gap-2">
-                            <span id="dday-title" class="text-xs font-semibold tracking-wider uppercase">과제 제출 마감</span>
-                            <span id="dday-counter" class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full">1/1</span>
-                        </div>
-                        <h3 id="dday-target-text" class="text-sm sm:text-base font-bold text-white mt-0.5">마감일을 설정해주세요</h3>
-                    </div>
-                </div>
-                <div id="dday-badge" class="font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0">
-                    D-DAY
-                </div>
-            </div>
-
-            <!-- 오른쪽 이동 화살표 -->
-            <button id="dday-next-btn" onclick="nextDDay()" class="z-10 w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-200 flex items-center justify-center transition-colors shrink-0 ml-2">
-                <i class="fa-solid fa-chevron-right text-xs"></i>
-            </button>
-
-        </div>
-    </div>
-
-    <!-- 메인 링크 카드리스트 -->
-    <main class="max-w-6xl mx-auto px-4 py-8 w-full flex-1 flex flex-col justify-center space-y-6">
-        
-        <!-- 1. 핵심 주요 링크 (4개) -->
-        <div>
-            <div class="text-center mb-8">
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2">원하는 메뉴를 선택하세요</h2>
-                <p class="text-sm text-slate-400">구글 드라이브, 클래스룸, 틴커캐드 회로 설계, 과제 정답 확인 페이지로 이동합니다.</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <!-- 0. 구글 드라이브 -->
-                <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" 
-                   class="group bg-slate-900 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
-                            <svg class="w-full h-full" viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
-                                <path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"/>
-                                <path d="M43.65 25 29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44c-.8 1.4-1.2 2.95-1.2 4.5h27.5z" fill="#00ac47"/>
-                                <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.5l5.85 11.45z" fill="#ea4335"/>
-                                <path d="M43.65 25 57.4 1.2c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"/>
-                                <path d="M57.4 1.2 43.65 25l13.75 23.8h27.5c0-1.55-.4-3.1-1.2-4.5l-25.4-44c-.8-1.4-1.95-2.5-3.3-3.3z" fill="#ffba00"/>
-                                <path d="M27.5 50 13.75 73.8c1.35.8 2.9 1.2 4.5 1.2h50.9c1.6 0 3.15-.45 4.5-1.2l-13.75-23.8z" fill="#2684fc"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-1 group-hover:text-blue-400 transition-colors">구글 드라이브</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">수업 관련 클라우드 파일 보관함 및 드라이브 바로가기</p>
-                    </div>
-                    <div class="mt-6 text-xs font-semibold text-blue-400 flex items-center gap-1">
-                        바로가기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </a>
-
-                <!-- 1. 구글 클래스룸 -->
-                <a href="https://classroom.google.com/c/ODcyMDYwNjQxNDY5" target="_blank" rel="noopener noreferrer" 
-                   class="group bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10 flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
-                            <img src="./icon/classroom.png" alt="구글 클래스룸 로고" class="w-full h-full object-contain">
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-1 group-hover:text-emerald-400 transition-colors">구글 클래스룸</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">수업 자료 확인 및 과제 제출을 위한 클래스룸 바로가기</p>
-                    </div>
-                    <div class="mt-6 text-xs font-semibold text-emerald-400 flex items-center gap-1">
-                        바로가기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </a>
-
-                <!-- 2. 틴커캐드 -->
-                <a href="https://www.tinkercad.com/dashboard/designs/circuits" target="_blank" rel="noopener noreferrer" 
-                   class="group bg-slate-900 border border-slate-800 hover:border-amber-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
-                            <img src="./icon/tinkercad.png" alt="틴커캐드 로고" class="w-full h-full object-contain">
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-1 group-hover:text-amber-400 transition-colors">틴커캐드</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">온라인 아두이노 회로 구성 및 코드 실습 환경 이동</p>
-                    </div>
-                    <div class="mt-6 text-xs font-semibold text-amber-400 flex items-center gap-1">
-                        바로가기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </a>
-
-                <!-- 3. 아두이노 정답 센터 -->
-                <a href="./answer.html" 
-                   class="group bg-slate-900 border border-slate-800 hover:border-cyan-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between">
-                    <div>
-                        <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl overflow-hidden p-0.5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
-                            <img src="./icon/gpja.png" alt="학교 로고" class="w-full h-full object-contain scale-110">
-                        </div>
-                        <h3 class="text-lg font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">과제 3-2 정답 센터</h3>
-                        <p class="text-xs text-slate-400 leading-relaxed">회로 분석 & 코드 문항별 정답 자동 조회 및 자가진단</p>
-                    </div>
-                    <div class="mt-6 text-xs font-semibold text-cyan-400 flex items-center gap-1">
-                        정답 확인하기 <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-
-        <!-- 2. 초소형 미니 보조 바 (한 줄로 줄인 사이즈) -->
-        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <button onclick="openModal('snippet-modal')" class="inline-flex items-center gap-2 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl text-xs text-slate-300 transition-colors">
-                <i class="fa-solid fa-code text-cyan-400"></i>
-                <span>코드 조각 복사</span>
-            </button>
-            
-            <button onclick="openModal('error-modal')" class="inline-flex items-center gap-2 bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 px-3.5 py-2 rounded-xl text-xs text-slate-300 transition-colors">
-                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
-                <span>자주 생기는 에러 해결</span>
-            </button>
-        </div>
-
-    </main>
-
-    <!-- 하단 푸터 -->
-    <footer class="border-t border-slate-800 bg-slate-900 py-6 text-center text-xs text-slate-500">
-        <p>아두이노 정보·전자공학 실습 포털</p>
-    </footer>
-
-    <!-- 모달 1: 코드 조각 복사 -->
-    <div id="snippet-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-5 shadow-2xl">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-code text-cyan-400"></i>
-                    <h3 class="text-sm font-bold text-white">필수 아두이노 코드 조각</h3>
-                </div>
-                <button onclick="closeModal('snippet-modal')" class="text-slate-500 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <div class="space-y-2 text-xs">
-                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] text-slate-400">핀 입출력 설정</p>
-                        <code class="text-cyan-300 font-mono text-[11px]">pinMode(13, OUTPUT);</code>
-                    </div>
-                    <button onclick="copySnippet('pinMode(13, OUTPUT);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
-                </div>
-                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] text-slate-400">디지털 출력 (HIGH)</p>
-                        <code class="text-cyan-300 font-mono text-[11px]">digitalWrite(13, HIGH);</code>
-                    </div>
-                    <button onclick="copySnippet('digitalWrite(13, HIGH);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
-                </div>
-                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] text-slate-400">시리얼 통신 시작</p>
-                        <code class="text-cyan-300 font-mono text-[11px]">Serial.begin(9600);</code>
-                    </div>
-                    <button onclick="copySnippet('Serial.begin(9600);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
-                </div>
-                <div class="bg-slate-950 border border-slate-800 p-2.5 rounded-xl flex items-center justify-between">
-                    <div>
-                        <p class="text-[10px] text-slate-400">1초 대기 (1000ms)</p>
-                        <code class="text-cyan-300 font-mono text-[11px]">delay(1000);</code>
-                    </div>
-                    <button onclick="copySnippet('delay(1000);')" class="text-slate-400 hover:text-cyan-400 p-1.5"><i class="fa-regular fa-copy"></i></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 모달 2: 에러 해결 가이드 -->
-    <div id="error-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-2xl p-5 shadow-2xl">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
-                    <h3 class="text-sm font-bold text-white">자주 생기는 에러 해결법</h3>
-                </div>
-                <button onclick="closeModal('error-modal')" class="text-slate-500 hover:text-white text-sm"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            
-            <div class="space-y-3 text-xs">
-                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
-                    <p class="font-bold text-red-400 mb-1"><i class="fa-solid fa-plug mr-1.5"></i>업로드 실패 (stk500_getsync / Port Error)</p>
-                    <p class="text-slate-400 text-[11px] leading-relaxed">
-                        아두이노 보드의 포트 연결이 끊겼거나 올바른 COM 포트가 선택되지 않은 경우입니다.<br>
-                        👉 <strong class="text-amber-400">툴 ➔ 포트(Port)</strong>에서 연결된 COM 포트를 다시 선택하세요.
-                    </p>
-                </div>
-                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl">
-                    <p class="font-bold text-red-400 mb-1"><i class="fa-solid fa-circle-xmark mr-1.5"></i>'was not declared in this scope' 에러</p>
-                    <p class="text-slate-400 text-[11px] leading-relaxed">
-                        변수/함수 이름 오탈자 또는 세미콜론(<code class="text-cyan-300">;</code>) 누락 시 발생합니다.<br>
-                        👉 대소문자 오탈자를 검사하고 문장 끝 세미콜론을 확인하세요.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 알림 토스트 팝업 -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 text-white text-xs px-4 py-3 rounded-xl border border-slate-700 shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
-        <i class="fa-solid fa-check-circle text-emerald-400"></i>
-        <span id="toast-msg">복사되었습니다!</span>
-    </div>
-
-    <!-- 자바스크립트 로직 -->
-    <script>
-        let ddays = JSON.parse(localStorage.getItem('ddays_list')) || [
-            { title: '수행평가 과제 제출 마감', date: '2026-09-15' }
-        ];
-        let currentIndex = 0;
-
-        // 모달 열기/닫기
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-        }
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-        }
-
-        // 코드 스니펫 복사 함수
-        function copySnippet(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast(`코드 [ ${text} ] 이(가) 복사되었습니다.`);
-            });
-        }
-
-        // 토스트 알림 함수
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-msg');
-            toastMsg.innerText = msg;
-            toast.classList.remove('opacity-0', 'pointer-events-none');
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2000);
-        }
-
-        // 1. 만료된 D-Day 자동 삭제 로직
-        function filterExpiredDDays() {
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const initialLength = ddays.length;
-            ddays = ddays.filter(item => {
-                const target = new Date(item.date + 'T00:00:00');
-                const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
-                return diffDays >= 0; // 지난 항목(음수)은 삭제
-            });
-
-            if (ddays.length !== initialLength) {
-                localStorage.setItem('ddays_list', JSON.stringify(ddays));
-            }
-        }
-
-        // 2. D-Day UI rendering & Dynamic Style
-        function renderDDay() {
-            filterExpiredDDays(); // 접속 시 만료건 필터링
-
-            const wrapper = document.getElementById('dday-wrapper');
-            if (!ddays || ddays.length === 0) {
-                wrapper.classList.add('hidden');
-                return;
-            }
-
-            wrapper.classList.remove('hidden');
-
-            if (currentIndex >= ddays.length) {
-                currentIndex = 0;
-            }
-
-            // 좌우 버튼 표시 제어
-            const prevBtn = document.getElementById('dday-prev-btn');
-            const nextBtn = document.getElementById('dday-next-btn');
-            if (ddays.length <= 1) {
-                prevBtn.classList.add('hidden');
-                nextBtn.classList.add('hidden');
+    // GitHub에 올라간 ddays.json 파일에서 데이터 읽어오기 (DB 역할)
+    async function loadDDaysFromGithub() {
+        try {
+            // 캐시 방지를 위해 타임스탬프(?t=...) 추가
+            const response = await fetch(`./ddays.json?t=${new Date().getTime()}`);
+            if (response.ok) {
+                ddays = await response.json();
             } else {
-                prevBtn.classList.remove('hidden');
-                nextBtn.classList.remove('hidden');
+                console.error("ddays.json 불러오기 실패");
             }
+        } catch (error) {
+            console.error("네트워크 오류:", error);
+        } finally {
+            renderDDay(); // 데이터 로드 후 D-Day 출력
+        }
+    }
 
-            const current = ddays[currentIndex];
-            const target = new Date(current.date + 'T00:00:00');
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+    // 모달 및 토스트 관련 함수
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
+    function copySnippet(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(`코드 [ ${text} ] 이(가) 복사되었습니다.`);
+        });
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toast-msg');
+        toastMsg.innerText = msg;
+        toast.classList.remove('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+            toast.classList.add('opacity-0', 'pointer-events-none');
+        }, 2000);
+    }
+
+    // 1. 만료된 D-Day 필터링
+    function filterExpiredDDays() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        ddays = ddays.filter(item => {
+            const target = new Date(item.date + 'T00:00:00');
             const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+            return diffDays >= 0; // 지남(음수) 제거
+        });
+    }
 
-            // Element references
-            const card = document.getElementById('dday-card');
-            const iconBox = document.getElementById('dday-icon-box');
-            const title = document.getElementById('dday-title');
-            const targetText = document.getElementById('dday-target-text');
-            const badge = document.getElementById('dday-badge');
-            const counter = document.getElementById('dday-counter');
+    // 2. D-Day 렌더링
+    function renderDDay() {
+        filterExpiredDDays();
 
-            title.innerText = current.title;
-            targetText.innerText = `${current.date} 까지`;
-            counter.innerText = `${currentIndex + 1}/${ddays.length}`;
-
-            // 남은 일수에 따른 초록 / 주황 / 빨강 스타일 제어
-            if (diffDays >= 7) {
-                // 🟢 초록색 (D-7 이상: 여유)
-                card.className = "relative border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-slate-900 to-emerald-500/10 rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-lg shadow-emerald-500/5 min-h-[90px]";
-                iconBox.className = "w-10 h-10 bg-emerald-500/20 border border-emerald-500/40 rounded-xl flex items-center justify-center text-emerald-400 shrink-0";
-                title.className = "text-xs font-semibold text-emerald-400 tracking-wider uppercase";
-                badge.innerText = `D-${diffDays}`;
-                badge.className = "bg-emerald-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0";
-
-            } else if (diffDays >= 3) {
-                // 🟠 주황색 (D-3 ~ D-6: 주의)
-                card.className = "relative border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-lg shadow-amber-500/5 min-h-[90px]";
-                iconBox.className = "w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded-xl flex items-center justify-center text-amber-400 shrink-0";
-                title.className = "text-xs font-semibold text-amber-400 tracking-wider uppercase";
-                badge.innerText = `D-${diffDays}`;
-                badge.className = "bg-amber-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0";
-
-            } else {
-                // 🔴 빨간색 (D-0 ~ D-2: 임박)
-                card.className = "relative border border-rose-500/40 bg-gradient-to-r from-rose-500/15 via-slate-900 to-rose-500/15 rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-lg shadow-rose-500/10 min-h-[90px]";
-                iconBox.className = "w-10 h-10 bg-rose-500/20 border border-rose-500/40 rounded-xl flex items-center justify-center text-rose-400 shrink-0";
-                title.className = "text-xs font-semibold text-rose-400 tracking-wider uppercase";
-                badge.innerText = diffDays === 0 ? "D-DAY" : `D-${diffDays}`;
-                badge.className = "bg-rose-500 text-white font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0 animate-pulse";
-            }
+        const wrapper = document.getElementById('dday-wrapper');
+        if (!ddays || ddays.length === 0) {
+            wrapper.classList.add('hidden');
+            return;
         }
 
-        function prevDDay() {
-            if (ddays.length === 0) return;
-            currentIndex = (currentIndex - 1 + ddays.length) % ddays.length;
-            renderDDay();
+        wrapper.classList.remove('hidden');
+
+        if (currentIndex >= ddays.length) {
+            currentIndex = 0;
         }
 
-        function nextDDay() {
-            if (ddays.length === 0) return;
-            currentIndex = (currentIndex + 1) % ddays.length;
-            renderDDay();
+        // 화살표 버튼 제어
+        const prevBtn = document.getElementById('dday-prev-btn');
+        const nextBtn = document.getElementById('dday-next-btn');
+        if (ddays.length <= 1) {
+            prevBtn.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+        } else {
+            prevBtn.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
         }
 
+        const current = ddays[currentIndex];
+        const target = new Date(current.date + 'T00:00:00');
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const diffDays = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+
+        const card = document.getElementById('dday-card');
+        const iconBox = document.getElementById('dday-icon-box');
+        const title = document.getElementById('dday-title');
+        const targetText = document.getElementById('dday-target-text');
+        const badge = document.getElementById('dday-badge');
+        const counter = document.getElementById('dday-counter');
+
+        title.innerText = current.title;
+        targetText.innerText = `${current.date} 까지`;
+        counter.innerText = `${currentIndex + 1}/${ddays.length}`;
+
+        // 남은 일수 색상 변경 스타일
+        if (diffDays >= 7) {
+            card.className = "relative border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-slate-900 to-emerald-500/10 rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-lg shadow-emerald-500/5 min-h-[90px]";
+            iconBox.className = "w-10 h-10 bg-emerald-500/20 border border-emerald-500/40 rounded-xl flex items-center justify-center text-emerald-400 shrink-0";
+            title.className = "text-xs font-semibold text-emerald-400 tracking-wider uppercase";
+            badge.innerText = `D-${diffDays}`;
+            badge.className = "bg-emerald-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0";
+        } else if (diffDays >= 3) {
+            card.className = "relative border border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-lg shadow-amber-500/5 min-h-[90px]";
+            iconBox.className = "w-10 h-10 bg-amber-500/20 border border-amber-500/40 rounded-xl flex items-center justify-center text-amber-400 shrink-0";
+            title.className = "text-xs font-semibold text-amber-400 tracking-wider uppercase";
+            badge.innerText = `D-${diffDays}`;
+            badge.className = "bg-amber-500 text-slate-950 font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0";
+        } else {
+            card.className = "relative border border-rose-500/40 bg-gradient-to-r from-rose-500/15 via-slate-900 to-rose-500/15 rounded-2xl p-4 sm:p-5 flex items-center justify-between shadow-lg shadow-rose-500/10 min-h-[90px]";
+            iconBox.className = "w-10 h-10 bg-rose-500/20 border border-rose-500/40 rounded-xl flex items-center justify-center text-rose-400 shrink-0";
+            title.className = "text-xs font-semibold text-rose-400 tracking-wider uppercase";
+            badge.innerText = diffDays === 0 ? "D-DAY" : `D-${diffDays}`;
+            badge.className = "bg-rose-500 text-white font-black text-lg sm:text-xl px-5 py-2 rounded-xl shadow-md shrink-0 animate-pulse";
+        }
+    }
+
+    function prevDDay() {
+        if (ddays.length === 0) return;
+        currentIndex = (currentIndex - 1 + ddays.length) % ddays.length;
         renderDDay();
-    </script>
-</body>
-</html>
+    }
+
+    function nextDDay() {
+        if (ddays.length === 0) return;
+        currentIndex = (currentIndex + 1) % ddays.length;
+        renderDDay();
+    }
+
+    // 페이지 진입 시 GitHub JSON 읽기 실행
+    loadDDaysFromGithub();
+</script>
