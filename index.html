@@ -105,7 +105,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 
                 <!-- 0. 구글 드라이브 -->
-                <a href="https://drive.google.com" target="_blank" rel="noopener noreferrer" 
+                <a id="quick-drive" href="https://drive.google.com" target="_blank" rel="noopener noreferrer" 
                    class="group bg-slate-900 border border-slate-800 hover:border-blue-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/10 flex flex-col justify-between">
                     <div>
                         <div class="w-12 h-12 bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
@@ -127,7 +127,7 @@
                 </a>
 
                 <!-- 1. 구글 클래스룸 -->
-                <a href="https://classroom.google.com/c/ODcyMDYwNjQxNDY5" target="_blank" rel="noopener noreferrer" 
+                <a id="quick-classroom" href="https://classroom.google.com/c/ODcyMDYwNjQxNDY5" target="_blank" rel="noopener noreferrer" 
                    class="group bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10 flex flex-col justify-between">
                     <div>
                         <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
@@ -142,7 +142,7 @@
                 </a>
 
                 <!-- 2. 틴커캐드 -->
-                <a href="https://www.tinkercad.com/dashboard/designs/circuits" target="_blank" rel="noopener noreferrer" 
+                <a id="quick-tinkercad" href="https://www.tinkercad.com/dashboard/designs/circuits" target="_blank" rel="noopener noreferrer" 
                    class="group bg-slate-900 border border-slate-800 hover:border-amber-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-amber-500/10 flex flex-col justify-between">
                     <div>
                         <div class="w-12 h-12 bg-amber-500/10 border border-amber-500/30 rounded-xl overflow-hidden p-2 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
@@ -157,7 +157,7 @@
                 </a>
 
                 <!-- 3. 아두이노 정답 센터 -->
-                <a href="./answer.html" 
+                <a id="quick-answer" href="./answer.html" 
                    class="group bg-slate-900 border border-slate-800 hover:border-cyan-500/50 p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10 flex flex-col justify-between">
                     <div>
                         <div class="w-12 h-12 bg-cyan-500/10 border border-cyan-500/30 rounded-xl overflow-hidden p-0.5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shrink-0">
@@ -409,33 +409,34 @@
 
     // 페이지 진입 시 GitHub JSON 읽기 실행
     loadDDaysFromGithub();
-async function applyQuickLinkSettings() {
-    try {
-        const response = await fetch(`./settings.json?t=${new Date().getTime()}`);
-        if (response.ok) {
+
+    // 관리자 페이지의 settings.json에 따라 빠른 이동 카드 표시/숨김
+    async function applyQuickLinkSettings() {
+        try {
+            const response = await fetch(`./settings.json?t=${new Date().getTime()}`);
+            if (!response.ok) {
+                console.error("settings.json 불러오기 실패:", response.status);
+                return;
+            }
+
             const settings = await response.json();
 
-            toggleCard('quick-drive', settings.drive);
-            toggleCard('quick-classroom', settings.classroom);
-            toggleCard('quick-tinkercad', settings.tinkercad);
-            toggleCard('quick-answer', settings.answer);
+            toggleCard('quick-drive', settings.drive !== false);
+            toggleCard('quick-classroom', settings.classroom !== false);
+            toggleCard('quick-tinkercad', settings.tinkercad !== false);
+            toggleCard('quick-answer', settings.answer !== false);
+        } catch (err) {
+            console.error("빠른 이동 설정 로드 실패:", err);
         }
-    } catch (err) {
-        console.error("설정 로드 실패:", err);
     }
-}
 
-function toggleCard(id, isVisible) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    if (isVisible) {
-        el.classList.remove('hidden');
-    } else {
-        el.classList.add('hidden');
+    function toggleCard(id, isVisible) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.toggle('hidden', !isVisible);
     }
-}
 
-window.addEventListener('DOMContentLoaded', applyQuickLinkSettings);
-</script>
+    window.addEventListener('DOMContentLoaded', applyQuickLinkSettings);
+    </script>
 </body>
 </html>
