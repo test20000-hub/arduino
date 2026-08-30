@@ -1,5 +1,5 @@
 {
-  "name": "2026 군포중앙고 정보수업",
+  "name": "2026 군포중앙고등학교 정보수업",
   "short_name": "군중고 정보수업",
   "description": "군포중앙고등학교 정보수업",
   "start_url": "./index.html",
@@ -9,12 +9,12 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2693/2693507.png",
+      "src": "./gpja.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2693/2693507.png",
+      "src": "./gpja.png",
       "sizes": "512x512",
       "type": "image/png"
     }
